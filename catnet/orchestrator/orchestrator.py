@@ -2,9 +2,10 @@ import time
 
 from catnet.stages.discovery import run_discovery
 from catnet.stages.portscan import port_scan
+from catnet.core.profiles import scan_profiles
 
 
-def run_pipeline(target):
+def run_pipeline(target, profile):
     """
     Controls the full CatNet scanning pipeline:
     1. Host discovery
@@ -43,7 +44,7 @@ def run_pipeline(target):
     for index, host in enumerate(hosts, start=1):
         print(f"\n[{index}/{total_hosts}] Scanning {host['target']}...")
 
-        scan_result = port_scan(host, output_base)
+        scan_result = port_scan(host, output_base, profile)
 
         if scan_result["error"]:
             print(f"  [ERROR] {scan_result['error']}")

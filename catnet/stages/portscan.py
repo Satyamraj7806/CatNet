@@ -1,8 +1,8 @@
 import subprocess
 import xml.etree.ElementTree as ET
+from catnet.core.profiles import scan_profiles
 
-
-def port_scan(host, output_base):
+def port_scan(host, output_base, profile):
     """
     Runs a TCP SYN scan (-sS) against a discovered host
     and returns structured port scan results.
@@ -11,9 +11,9 @@ def port_scan(host, output_base):
     ip = host["target"]
     xml_file = f"{output_base}_{ip}.xml"
 
-    print(f"[+] Starting port scan on {ip}")
+    print(f"[+] Starting port scan on {ip}({profile['name']})")
 
-    command = ["nmap", "-sS", "-oX", xml_file, ip]
+    command = ["nmap"] + profile["nmap_args"] + ["-oX", xml_file, ip]
 
     result = subprocess.run(
         command,
@@ -21,7 +21,6 @@ def port_scan(host, output_base):
         stderr=subprocess.DEVNULL
     )
 
-    # --- Nmap execution failure ---
     if result.returncode != 0:
         return {
             "target": ip,
