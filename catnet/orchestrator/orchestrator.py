@@ -3,6 +3,7 @@ import time
 from catnet.stages.discovery import run_discovery
 from catnet.stages.portscan import port_scan
 from catnet.core.profiles import scan_profiles
+from catnet.utils.network import get_local_network
 
 
 def run_pipeline(target, profile):

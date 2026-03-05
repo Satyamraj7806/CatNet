@@ -7,8 +7,12 @@ scan_profiles = {
         "name" : "Full Scan",
         "nmap_args" : ["-sS","-sV","-O", "-T4", "-p-"]
     },
+    "deep" : {
+        "name" : "Deep Scan",
+        "nmap_args" : ["-sS", "-sV", "-O", "-A", "-T4", "-p-"]
+    },
     "stealth" : {
         "name" : "Stealth Scan",
         "nmap_args" : ["-T2", "-sS"]
-    }
+    }   
 }

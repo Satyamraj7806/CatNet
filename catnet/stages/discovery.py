@@ -1,11 +1,12 @@
 import subprocess
 import xml.etree.ElementTree as ET
-
+from catnet.utils.network import get_local_network
 
 
 def run_discovery(output_base, target):
     xml_file = f"{output_base}.xml"
     command = ["nmap", "-sn", "-oX", xml_file, target]
+    
 
     result = subprocess.run(command, stdout=subprocess.DEVNULL)
 
