@@ -35,8 +35,13 @@ def choose_profile():
 
 
 def main():
-    print("\nWelcome to CatNet Advanced Recon Framework\n")
-
+    print(r"""
+  ____      _   _   _      _   
+ / ___|__ _| |_| \ | | ___| |_ 
+| |   / _` | __|  \| |/ _ \ __|
+| |__| (_| | |_| |\  |  __/ |_ 
+ \____\__,_|\__|_| \_|\___|\__|
+    """)
     while True:
         print("1) Scan Single Device")
         print("2) Scan Local Network")
