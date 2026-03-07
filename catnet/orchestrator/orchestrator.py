@@ -4,6 +4,7 @@ from catnet.stages.discovery import run_discovery
 from catnet.stages.portscan import port_scan
 from catnet.core.profiles import scan_profiles
 from catnet.utils.network import get_local_network
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
 def run_pipeline(target, profile):
@@ -42,22 +43,30 @@ def run_pipeline(target, profile):
     print("\n[STAGE 2] Port Scanning")
     print("------------------------")
 
-    for index, host in enumerate(hosts, start=1):
-        print(f"\n[{index}/{total_hosts}] Scanning {host['target']}...")
+    # --- Run port scans in parallel ---
 
-        scan_result = port_scan(host, output_base, profile)
+    with ThreadPoolExecutor(max_workers=5) as executor:
 
-        if scan_result["error"]:
-            print(f"  [ERROR] {scan_result['error']}")
-            continue
+        futures = []
+        for host in hosts:
+            # Change this line in orchestrator.py
+            future = executor.submit(port_scan, host, output_base, profile)
+            futures.append(future)
 
-        ports = scan_result["ports"]
+        for future in as_completed(futures):
+            result = future.result()
+            
+            if result["error"]:
+                print(f"[ERROR] {result['error']}")
+                continue
 
-        if not ports:
-            print("  No open ports found.")
-        else:
-            print("  Open ports:")
-            for port in ports:
-                print(f"    - {port['port']}/{port['protocol']}")
+            print(f"\nResults for {result['target']}")
+
+            if not result["ports"]:
+                print("  No open ports")
+
+            else:
+                for port in result["ports"]:
+                    print(f"  {port['port']}/{port['protocol']}")
 
     print("\n[✓] Scan completed.\n")
